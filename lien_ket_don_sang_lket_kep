@@ -1,0 +1,387 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+typedef struct    {
+    	char hoten[30];
+    	int masv;
+    	float d1, d2, d3;
+}Data;
+typedef struct tagNode    {
+    	Data infor;
+    	struct tagNode *next,*prev; // sua lk kep
+}Node;
+typedef struct    {
+    	Node *pHead;  
+    	Node *pTail;
+    	int spt;
+}LList;
+/////////////////////////////////////
+void initList(LList *L)
+    {
+    	L->pHead = NULL;
+    	L->pTail = NULL;
+    	L->spt = 0;
+    }
+/////////////////////////////////////
+int emptyList(LList L)//ktra ds rong
+ {
+    	return (L.spt == 0); 
+}
+// lk kep
+void insert_Head(LList *L, Data x)
+
+    {
+    	Node *pp;
+    	pp = (Node*) malloc(sizeof(Node));
+    	pp->infor = x;
+    	pp->next = NULL;
+    	pp->prev = NULL:
+    	if(emptyList(*L)){
+    			L->pHead = pp;
+    			L->pTail = pp;
+    		}  	
+        else {
+    		pp->pHead->prev = pp;
+    		pp->next = L->pHead ;
+    		L->pHead = pp;
+    		}
+    	L->spt++;
+    }
+///////////////////////////////////////
+void nhap(Data *x){
+    printf("Nhap ma sv: ");
+    scanf("%d", &(x->masv));
+    
+    if(x->masv > 0){
+       printf("Nhap ho ten sinh vien :");
+	    scanf("%s", x->hoten);
+        printf("Nhap diem mon 1: ");
+        scanf("%f", &(x->d1));
+        printf("Nhap diem mon 2: ");
+        scanf("%f", &(x->d2));
+        printf("Nhap diem mon 3: ");
+        scanf("%f", &(x->d3));
+    }
+}
+void in(Data x){
+    printf("Ten: %s, Ma: %d, Diem 1: %.2f, Diem 2: %.2f, Diem 2: %.2f\n", 
+            x.hoten, x.masv, x.d1, x.d2, x.d3);
+}
+void processList(LList L){
+    Node *pp = L.pHead;
+    while( pp != NULL ){
+        	in(pp->infor); //in d? li?u trong node 
+        	pp = pp->link;
+    	}
+}
+//them tim kiem theo ten
+Node*search(LList L, char name[30]){
+	Node*pp =L.pHead;
+	while(pp != NULL && !strstr(pp-> infor.hoten,name))
+	pp = pp->link;
+	return pp;
+} 
+//tk theo ma
+Node*search(LList L, int id){
+	Node*pp =L.pHead;
+	while(pp!= NULL && (pp->infor.masv != id))
+	pp=pp->link;
+	return pp;
+}
+//Them cuoi lk kep
+void insert_Tail(LList*L,Data x){
+	Node*pp;
+	pp=(Node*) malloc(sizeof(Node));
+	pp->infor= x;
+	pp->next = NULL;
+	pp -> prev =NULL;
+	if(emptyList(*L)){
+		L->pHead=pp;
+		L->pTail = pp;
+	}else{
+		L-> pTail->next =pp;
+		pp-> prev = L->pTail;
+		L->pTail=pp;
+	}
+	L-> spt++;
+
+}
+//lk kep
+void insert_After(LList*L,Node*q, Data x){
+	Node*pp;
+	if(NULL==q) return;
+	else{
+		pp=(Node*) malloc(sizeof(Node));
+		pp-> infor = x;
+		pp->next = q-> next;
+		q->next-> prev = pp;
+		q-> next =pp;
+		pp-> prev = q;
+		if(q==L->pTail)L->pTail =pp;
+		L->spt++;
+
+	}
+}
+//lien ket kep
+void delete_Head(LList*L){
+	Node*pp;
+	if(emptyList(*L)) return;
+	else{
+		pp=L->pHead;
+		L->pHead=pp->next;
+		if(L-> pHead!= NUll) L-> pHead -> prev =NULL;
+		free(pp);
+		L->spt--;
+		if(L->pHead==NULL)L->pTail=NULL;
+	}
+	
+}
+//lienket kep
+void delete_After(LList*L,Node*q){
+	Node*pp;
+	if(NULL==q)return;
+	else{
+		pp = q->next;
+		q-> next = pp->next;
+		if(pp->next!= NULL ) pp-> next -> prevv = q);
+		free(pp);
+		L->spt--;
+		//con tiep.....................
+	}
+
+}//Xoa theo ten
+void delete_ten(LList*L, char ten[30]){
+	Node*pp=L-> pHead,*q;
+	while(pp!= NULL && !strstr(pp->infor.hoten, ten)){
+		q=pp;
+		pp=pp->link;
+	}
+	if(NULL == pp) return;
+	else
+	    if(NULL==L->pHead) delete_Head(L);
+	    else delete_After(L,q);
+}
+//Xoa theo ma
+void delete_ma(LList*L, int ma){
+	Node*pp=L-> pHead,*q;
+	while(pp!= NULL && pp->infor.masv != ma){
+		q=pp;
+		pp=pp->link;
+	}
+	if(NULL == pp) return;
+	else
+	    if(NULL==L->pHead) delete_Head(L);
+	    else delete_After(L,q);
+}
+//Sap xep theo ten
+void sort_ten(LList*L){
+	if(emptyList(*L)) return;
+	for(Node*p = L ->pHead; p!=NULL; p=p->link){
+		for(Node*q = p->link; q!= NULL; q=q->link){
+			if(strcmp(p->infor.hoten,q->infor,hoten>0)){
+				Data vt =p->infor;
+				p->infor = q->infor;
+				q->infor = vt;
+			}
+		}
+	}
+}
+//Sx theo ma tang dan
+void sort_ma(LList*l){
+	if(emtyList(*L)) return;
+	for(Node*p = p->Head; p != NULL; p=p->link){
+		for(Node*q = p->link; q != NULL; q =q->link){
+			if(p->infor.masv> q->infor.masv){
+				Data vt =p->infor;
+				p->infor = q->infor;
+				q->infor = vt;
+			}
+		}
+		
+	}
+}
+//tach danh sach
+void tach(LList L, LList *L1, LList* L2){
+	initList(L1);
+	initList(L2);
+	Node*pp =L.Head;
+	while(pp!= NULL){
+		if(pp->infor.d1 < 4 || pp->infor.d2< 4 || pp-.infor.d3<4)
+			insert_Head(L1, pp->infor);
+		else
+			insert_Heaed(L2, pp->infor);
+		pp= pp->link;
+	}
+}
+//ghep danh sach
+void ghep(LList L1, LList L2, LList*L){
+	initList(L);
+	Node* p1 = L1.pHead;
+	Node*p2 = L2.pHead;
+	if(L1.spt < L2.spt){
+		while(p1!= NULL){
+			insert_Head(L, p1->infor);
+			insert_Head(L, p2 -> infor);
+			p1 = p1->link;
+			p2 = p2 -> link;
+		}
+		whlie (p2 != NULL){
+			insert_Head(L, p2 -> infor );
+			p2 = p2-> link;
+		}
+	} else{
+		while( p2 != NULL){
+			insert_Head(L, p1->infor);
+			insert_Head(L, p2-> infor);
+			p1 = p1->link;
+			p2 = p2->link;
+		}
+		while (p1 != NULL){
+			insert_Head(L,p1->infor);
+			p1 = p1 -> link;
+		}
+	}
+}
+int main(){
+    LList L;
+	int kt = 0;
+	Data x;
+	initList(&L); //tao ra 1 ds rong
+	do{
+	    printf("\nChuong trinh lam viec voi DSLK don SV\n");
+	    printf("\n1: Them nut vao dau danh sach");
+	    printf("\n2: Them nut vao cuoi danh sach");
+	    printf("\n3: Them nut vao sau mot nut khac trong danh sach");
+	    printf("\n4: Xoa sinh vien theo ten ");
+	    printf("\n5: Xoa sinh vien theo ma ");
+	    printf("\n6: Tim kiem theo ten ");
+	    printf("\n7: Tim kiem theo ma ");
+	    printf("\n8:  Xoa sinh vien dung sau sv khac");
+	    printf("\n9: Sap xep danh sach theo ten");
+	    printf("\10: Sap xep danh sach theo ma tang dan");
+	    printf("n\11: Tach danh sach sinh vien dat va khong dat");
+	    printf("n\12: Ghep danh sach ")
+	    printf("\n15: Duyet ds");
+	    
+	    printf("\n0: Thoat");
+	    printf("\nMoi ban chon: ");
+	    int chon;
+	    scanf("%d", &chon);
+	    switch(chon){
+	        case 1: 
+	            printf("Nhap so thông tin sv can them\n");
+	            scanf("%s",x.hoten);
+	            nhap(&x);
+	            if(x.masv > 0) 
+                	insert_Head(&L, x);
+            	break;
+            case 2:	
+	             printf("Nhap so thông tin sv can them vao cuoi\n");
+	            nhap(&x);
+	            if(x.masv > 0) 
+                	insert_Head(&L, x);
+					insert_Tail(&L,x);
+        
+            	break;
+            case 3:
+            	{
+                    char ten[30];
+                    printf("Nhap ten sinh vien muon chen vao sau: ");
+                    scanf("%s", ten);
+                    Node *q = search(L, ten);
+                    if (q != NULL) {
+                        nhap(&x);
+                        if (x.masv > 0)insert_After(&L,q,x);
+                    } else {
+                        printf("Khong tim thay sinh vien!\n");
+                    }
+                }
+            	break;
+            case 4: 
+                
+                char tenXoa[30];
+                printf("Nhap ten sinh vien can xoa: ");
+                scanf("%s", tenXoa);
+                delete_ten(&L, tenXoa);
+                break;
+            case 5:
+                int maxoa;
+                printf("Nhap ma sinh vien can xoa: ");
+                scanf("%d",maxoa);
+                delete_ma(&L,maxoa);
+				break;
+			case 6:{
+				char tentim[30];
+				printf("Nhap ten sinh vien can tim: ");
+				scanf("%s", tentim);
+				Node*q != search(L,tentim);
+				if(q != NULL){
+					printf("Tim thay sinh vien: ");
+					in(q->infor);
+				}else{
+					printf("Khong tim thay sinh vien\n");
+				}
+				break;
+			}
+			case 7:{
+				int matim;
+				printf("Nhap ma sinh vien can tim: ");
+				scanf("%d", matim);
+				Node*q != search(L,matim);
+				if(q != NULL){
+					printf("Tim thay sinh vien: ");
+					in(q->infor);
+				}else{
+					printf("Khong tim thay sinh vien\n");
+				}
+				break;
+			}
+			case 8:{
+				char tentruoc[30];
+				printf("Nhap ten sinh vien truoc sinh vien muon xoa: ");
+				scanf("%s", tentruoc);
+				Node*q != search(L,tentruoc);
+				if(q!= NULL && q->infor link!= NULL){
+					delete_After(&L,q);
+					printf("Da xoa sinh vien phia sau: ");
+				}else{
+					printf("Khong tim thay sinh vien muon xoa\n");
+				}
+				break;
+			}
+			case 9:
+				sort_ten(&L);
+				printf("Danh sach xong khi sap xep theo ten:\n");
+				processList(L);
+				break;
+			case 10:
+				sort_ma(&L);
+				printf("Danh sach xong khi sap xep theo ma tang dan:\n ")
+				processList(L);
+				break;
+			case 11:
+				LList L1, L2;
+				tach(L,&L1,L2);
+				printf("Danh sach sinh vien khong dat\n");
+				processList(L1);
+				printf("Danh sach sinh vien dat\n");
+				processList(L2);
+				break;
+			case 12:
+				LList L1,L2, L_ghep;
+				tach(L,&L1, &L2);
+				ghep(L1,L2,&L)_ghep);
+				printf("Danh sach sau khi ghep\n");
+				processList(L_ghep);
+				break;				
+            case 15:  
+                processList(L);
+                break;    
+            case 0: 
+                printf("Bye bye\n");
+	            kt = 1;
+        }
+	}while(kt==0); 
+}
+
+          
